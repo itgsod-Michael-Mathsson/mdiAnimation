@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        var crushDec = false;
+        var stage;
+        var canvas;
+        var bitBottle;
+        var bottle;
+        var background;
+        var nmrBottles = 0;
+        var string;
+        createjs.Ticker.addEventListener("tick", handleTick);
+        createjs.Ticker.paused = true;
+
+
+        function init(){
+            load()
+
+        }
+
+        async function load(){
+            canvas = document.getElementById("Canvas");
+            stage = new createjs.Stage(canvas);
+
+            background = new Image();
+            background.src = "animationPics/dumpster.png";
+            background.onload = await backLoad;
+
+
+            bottle = new Image();
+            bottle.src = "animationPics/glasFlaska.png";
+            bottle.onload = await bottleLoad;
+
+
+            stage.update();
+
+            createjs.Ticker.paused = false;
+        }
+
+
+        function backLoad(event){
+            var image = event.target;
+            var bitmap = new createjs.Bitmap(image);
+            stage.addChild(bitmap);
+            bitmap.zIndex = -2;
+            //stage.update();
+        }
+
+        function bottleLoad(event){
+            var image = event.target;
+            bitBottle = new createjs.Bitmap(image);
+            stage.addChild(bitBottle);
+            bitBottle.zIndex = 2;
+            bitBottle.x = 300 + Math.random() * 350;
+            bitBottle.y = 100;
+            bitBottle.scaleX = bitBottle.scaleY = bitBottle.scale = 0.5;
+            bitBottle.name = "bot" + nmrBottles;
+            nmrBottles ++;
+            //stage.update();
+        }
+
+
+        function handleTick(){
+
+
+            if (!createjs.Ticker.paused){
+
+                for (i = 0; i < nmrBottles; i++) {
+                    string = "bot" + i;
+                    stage.getChildByName(string).y += 4;
+
+                    if(stage.getChildByName(string).y == 220){
+                        bottle = new Image();
+                        bottle.src = "animationPics/glasFlaska.png";
+                        bottle.onload = bottleLoad;
+                    }
+                    if(i > 10){
+                        window.location.replace("road.html")
+                    }
+                }
+
+
+            }
+            stage.update();
+
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="canvasDiv">
+    <canvas id="Canvas" width="1200" height="600"></canvas>
+    </div>
+
+</body>
+</html>

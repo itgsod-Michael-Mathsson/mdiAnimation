@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        var crushDec = false;
+        var splitter;
+        var bitSplitter;
+        var stage;
+        var canvas;
+        var bitBottle;
+        var bottle;
+        var background;
+        var frontground;
+        var transportband;
+        var bitTransportband1;
+        var bitTransportband2;
+        var crusher;
+        var bitCrusher;
+        var nmrBottles = 0;
+        var nmrSpl = 0;
+        var string;
+        var start = 0;
+        createjs.Ticker.addEventListener("tick", handleTick);
+        createjs.Ticker.paused = true;
+
+
+        function init(){
+
+            load()
+
+        }
+
+        async function load(){
+            canvas = document.getElementById("Canvas");
+            stage = new createjs.Stage(canvas);
+
+            background = new Image();
+            background.src = "animationPics/background2.png";
+            background.onload = await backLoad;
+
+            bottle = new Image();
+            bottle.src = "animationPics/glasFlaska.png";
+
+            stage.update();
+
+            transportband = new Image();
+            transportband.src = "animationPics/transportband.png";
+            transportband.onload = await transLoad;
+
+            stage.update();
+
+            frontground = new Image();
+            frontground.src = "animationPics/furnace.png";
+            frontground.onload = await frontLoad;
+
+            splitter = new Image();
+            splitter.src = "animationPics/trasigtGlas.png";
+            splitter.onload = await splitterLoad;
+
+            stage.update();
+
+            createjs.Ticker.paused = false;
+        }
+
+
+        function backLoad(event){
+            var image = event.target;
+            var bitmap = new createjs.Bitmap(image);
+            stage.addChild(bitmap);
+            bitmap.zIndex = -2;
+            //stage.update();
+        }
+        function frontLoad(event){
+            var image = event.target;
+            var bitmap = new createjs.Bitmap(image);
+            stage.addChild(bitmap);
+            bitmap.zIndex = 10;
+            //stage.update();
+        }
+
+
+        function bottleLoad(event){
+            var image = event.target;
+            bitBottle = new createjs.Bitmap(image);
+            stage.addChild(bitBottle);
+            bitBottle.zIndex = 2;
+            bitBottle.x = 600;
+            bitBottle.y = 250;
+            bitBottle.scaleX = bitBottle.scaleY = bitBottle.scale = 0.5;
+            bitBottle.name = "bot" + nmrBottles;
+            nmrBottles ++;
+            //stage.update();
+        }
+        function splitterLoad(event){
+            var image = event.target;
+            bitSplitter = new createjs.Bitmap(image);
+            stage.addChild(bitSplitter);
+            bitSplitter.zIndex = 2;
+            bitSplitter.x = -60;
+            bitSplitter.y = 350;
+            bitSplitter.zIndex = 2;
+            //bitSplitter.rotate(90);
+            bitSplitter.scaleX = bitSplitter.scaleY = bitSplitter.scale = 0.5;
+            bitSplitter.name = "spl" + nmrSpl;
+            nmrSpl ++;
+            //stage.update();
+        }
+
+        function transLoad(event){
+            var image = event.target;
+            bitTransportband1 = new createjs.Bitmap(image);
+            bitTransportband2 = new createjs.Bitmap(image);
+            stage.addChild(bitTransportband1);
+            stage.addChild(bitTransportband2);
+            bitTransportband1.zIndex = 1;
+            bitTransportband1.y = 270;
+            bitTransportband1.x = -400;
+            bitTransportband2.zIndex = 1;
+            bitTransportband2.y = 270;
+            bitTransportband2.x = -1980;
+
+            //stage.update();
+        }
+
+        function handleTick(){
+
+
+            if (!createjs.Ticker.paused){
+                bitTransportband1.x += 4;
+                bitTransportband2.x += 4;
+
+                for (i = start; i < nmrSpl; i++) {
+                    string = "spl" + i;
+                    stage.getChildByName(string).x += 4;
+                    if (stage.getChildByName(string).x == 100) {
+                        splitter = new Image();
+                        splitter.src = "animationPics/trasigtGlas.png";
+                        splitter.onload = splitterLoad;
+
+                        frontground = new Image();
+                        frontground.src = "animationPics/furnace.png";
+                        frontground.onload = frontLoad;
+                    }
+
+                    if (stage.getChildByName(string).x > 500){
+                        crushDec = true;
+                        stage.removeChild(stage.getChildByName(string));
+                        start ++;
+                        bottle = new Image();
+                        bottle.src = "animationPics/glasFlaska.png";
+                        bottle.onload = bottleLoad;
+
+                        frontground = new Image();
+                        frontground.src = "animationPics/furnace.png";
+                        frontground.onload = frontLoad;
+                    }
+
+                }
+                for (i = 0; i < nmrBottles; i++){
+                    string = "bot" + i;
+                    stage.getChildByName(string).x += 4;
+                }
+
+
+            }
+            stage.update();
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="canvasDiv">
+    <canvas id="Canvas" width="1200" height="600"></canvas>
+    </div>
+
+</body>
+</html>

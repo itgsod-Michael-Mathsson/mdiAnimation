@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://code.createjs.com/easeljs-0.7.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+
+        var crushDec = false;
+        var stage;
+        var canvas;
+        var truck;
+        var road;
+        var bottle;
+        var background;
+        var string;
+        createjs.Ticker.addEventListener("tick", handleTick);
+        createjs.Ticker.paused = true;
+
+
+        function init(){
+            load()
+
+        }
+
+        async function load(){
+            canvas = document.getElementById("Canvas");
+            stage = new createjs.Stage(canvas);
+
+            background = new Image();
+            background.src = "animationPics/road.png";
+            background.onload = await backLoad;
+
+
+            bottle = new Image();
+            bottle.src = "animationPics/truck.png";
+            bottle.onload = await truckLoad;
+
+
+            stage.update();
+
+            createjs.Ticker.paused = false;
+        }
+
+
+        function backLoad(event){
+            var image = event.target;
+            road = new createjs.Bitmap(image);
+            stage.addChild(road);
+            bitmap.zIndex = -2;
+            //stage.update();
+        }
+
+        function truckLoad(event){
+            var image = event.target;
+            truck = new createjs.Bitmap(image);
+            stage.addChild(truck);
+            truck.zIndex = 2;
+            truck.x = 20;
+            truck.y = 280;
+            truck.scaleX = truck.scaleY = truck.scale = 0.5;
+            //stage.update();
+        }
+
+
+        function handleTick(){
+
+
+            if (!createjs.Ticker.paused){
+                truck.x += 4;
+                road.x -= 4;
+
+                if(truck.x > 1000){
+                    window.location.replace("index.html")
+                }
+
+            }
+            stage.update();
+            
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="canvasDiv">
+    <canvas id="Canvas" width="1200" height="600"></canvas>
+    </div>
+
+</body>
+</html>
