@@ -7,23 +7,13 @@
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script>
         var crushDec = false;
-        var splitter;
-        var bitSplitter;
         var stage;
         var canvas;
         var bitBottle;
         var bottle;
         var background;
-        var frontground;
-        var transportband;
-        var bitTransportband1;
-        var bitTransportband2;
-        var crusher;
-        var bitCrusher;
         var nmrBottles = 0;
-        var nmrSpl = 0;
         var string;
-        var start = 0;
         createjs.Ticker.addEventListener("tick", handleTick);
         createjs.Ticker.paused = true;
 
@@ -38,29 +28,13 @@
             stage = new createjs.Stage(canvas);
 
             background = new Image();
-            background.src = "animationPics/background.png";
+            background.src = "animationPics/dumpster.png";
             background.onload = await backLoad;
 
-            stage.update();
-
-            transportband = new Image();
-            transportband.src = "animationPics/transportband.png";
-            transportband.onload = await transLoad;
-
-            stage.update();
 
             bottle = new Image();
             bottle.src = "animationPics/glasFlaska.png";
             bottle.onload = await bottleLoad;
-
-            crusher = new Image();
-            crusher.src = "animationPics/crusher.png";
-            crusher.onload = await crushLoad;
-
-            frontground = new Image();
-            frontground.src = "animationPics/inOut.png";
-            frontground.onload = await frontLoad;
-
 
 
             stage.update();
@@ -76,120 +50,44 @@
             bitmap.zIndex = -2;
             //stage.update();
         }
-        function frontLoad(event){
-            var image = event.target;
-            var bitmap = new createjs.Bitmap(image);
-            stage.addChild(bitmap);
-            bitmap.zIndex = 10;
-            //stage.update();
-        }
-
-        function crushLoad(event){
-            var image = event.target;
-            bitCrusher = new createjs.Bitmap(image);
-            stage.addChild(bitCrusher);
-            bitCrusher.x = 500;
-            bitCrusher.y = -300;
-        }
-
 
         function bottleLoad(event){
             var image = event.target;
             bitBottle = new createjs.Bitmap(image);
             stage.addChild(bitBottle);
             bitBottle.zIndex = 2;
-            bitBottle.x = -60;
-            bitBottle.y = 230;
+            bitBottle.x = 300 + Math.random() * 350;
+            bitBottle.y = 100;
             bitBottle.scaleX = bitBottle.scaleY = bitBottle.scale = 0.5;
             bitBottle.name = "bot" + nmrBottles;
             nmrBottles ++;
             //stage.update();
         }
-        function splitterLoad(event){
-            var image = event.target;
-            bitSplitter = new createjs.Bitmap(image);
-            stage.addChild(bitSplitter);
-            bitSplitter.zIndex = 2;
-            bitSplitter.x = 600;
-            bitSplitter.y = 330;
-            bitSplitter.zIndex = 2;
-            //bitSplitter.rotate(90);
-            bitSplitter.scaleX = bitSplitter.scaleY = bitSplitter.scale = 0.5;
-            bitSplitter.name = "spl" + nmrSpl;
-            nmrSpl ++;
-            //stage.update();
-        }
 
-        function transLoad(event){
-            var image = event.target;
-            bitTransportband1 = new createjs.Bitmap(image);
-            bitTransportband2 = new createjs.Bitmap(image);
-            stage.addChild(bitTransportband1);
-            stage.addChild(bitTransportband2);
-            bitTransportband1.zIndex = 1;
-            bitTransportband1.y = 250;
-            bitTransportband1.x = -520;
-            bitTransportband2.zIndex = 1;
-            bitTransportband2.y = 250;
-            bitTransportband2.x = -2100;
-
-            //stage.update();
-        }
 
         function handleTick(){
 
 
             if (!createjs.Ticker.paused){
-                bitTransportband1.x += 4;
-                bitTransportband2.x += 4;
-                if (!crushDec){
-                bitCrusher.y = -300;
-                }
 
-                for (i = start; i < nmrBottles; i++) {
+                for (i = 0; i < nmrBottles; i++) {
                     string = "bot" + i;
-                    stage.getChildByName(string).x += 4;
-                    if (stage.getChildByName(string).x == 100) {
+                    stage.getChildByName(string).y += 4;
+
+                    if(stage.getChildByName(string).y == 220){
                         bottle = new Image();
                         bottle.src = "animationPics/glasFlaska.png";
                         bottle.onload = bottleLoad;
-
-                        frontground = new Image();
-                        frontground.src = "animationPics/inOut.png";
-                        frontground.onload = frontLoad;
                     }
-
-                    if (stage.getChildByName(string).x > 500){
-                        crushDec = true;
-                        stage.removeChild(stage.getChildByName(string));
-                        start ++;
-                        splitter = new Image();
-                        splitter.src = "animationPics/trasigtGlas.png";
-                        splitter.onload = splitterLoad;
-
-                        frontground = new Image();
-                        frontground.src = "animationPics/inOut.png";
-                        frontground.onload = frontLoad;
+                    if(i > 10){
+                        window.location.replace("road.html")
                     }
-
-                    if (crushDec){
-                        bitCrusher.y = -40;
-                        crushDec = false;
-
-                    }
-                }
-                for (i = 0; i < nmrSpl; i++){
-                    string = "spl" + i;
-                    stage.getChildByName(string).x += 4;
                 }
 
 
             }
             stage.update();
 
-            if(start > 5){
-                window.location.replace("smelt.html")
-            }
         }
     </script>
 </head>
